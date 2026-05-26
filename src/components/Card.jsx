@@ -2,7 +2,7 @@ import WeatherRenderer from './WeatherRenderer';
 import CurrencyRenderer from './CurrencyRenderer';
 import TimeRenderer from './TimeRenderer';
 
-export default function Card({ card, editMode, motion, onPointerDown, onDelete, onTypeSelect }) {
+export default function Card({ card, editMode, motion, onPointerDown, onDelete, onTypeSelect, onConfigOpen }) {
   const activeMotion = motion?.id === card.id ? motion : null;
   const isResizing = activeMotion?.action === 'resize';
 
@@ -23,6 +23,18 @@ export default function Card({ card, editMode, motion, onPointerDown, onDelete, 
       }}
       onPointerDown={(event) => onPointerDown(event, card, 'move')}
     >
+      {card.type && (
+        <button
+          className="configButton"
+          type="button"
+          aria-label="Configure card"
+          onClick={() => onConfigOpen(card.id)}
+          onPointerDown={(event) => event.stopPropagation()}
+          tabIndex={editMode ? 0 : -1}
+        >
+          ⚙
+        </button>
+      )}
       <div className="cardBody">
         {card.type ? (
           <div className="cardContent">

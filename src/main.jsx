@@ -2,7 +2,8 @@ import { StrictMode, useEffect, useRef, useState } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
 import Card from './components/Card';
 import TypePicker from './components/TypePicker';
-import { getDefaultConfig } from './cardTypes';
+import ConfigModal from './components/ConfigModal';
+import { getDefaultConfig, getCardType } from './cardTypes';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -113,12 +114,30 @@ function App() {
 
   function deleteCard(id) {
     setCards((items) => items.filter((item) => item.id !== id));
+    if (configCardId === id) {
+      setConfigCardId(null);
+    }
   }
 
   const [pickingCardId, setPickingCardId] = useState(null);
+  const [configCardId, setConfigCardId] = useState(null);
 
   function handleTypeSelect(cardId) {
     setPickingCardId(cardId);
+    setConfigCardId(null);
+  }
+
+  function handleConfigOpen(cardId) {
+    setConfigCardId(cardId);
+    setPickingCardId(null);
+  }
+
+  function closeConfigModal() {
+    setConfigCardId(null);
+  }
+
+  function handleConfigSave() {
+    /* will be implemented by config forms */
   }
 
   function handleTypePick(typeId) {
@@ -139,6 +158,12 @@ function App() {
       setPickingCardId(null);
     }
   }, [editMode, pickingCardId]);
+
+  useEffect(() => {
+    if (!editMode && configCardId !== null) {
+      setConfigCardId(null);
+    }
+  }, [editMode, configCardId]);
 
   function startPointer(event, card, action) {
     if (!editMode || event.button !== 0) return;
@@ -247,11 +272,27 @@ function App() {
             onPointerDown={startPointer}
             onDelete={deleteCard}
             onTypeSelect={handleTypeSelect}
+            onConfigOpen={handleConfigOpen}
           />
         ))}
       </section>
 
       <TypePicker isOpen={pickingCardId !== null} onSelect={handleTypePick} onClose={closeTypePicker} />
+
+      <ConfigModal
+        isOpen={configCardId !== null}
+        title={(() => {
+          const card = cards.find((c) => c.id === configCardId);
+          const type = card ? getCardType(card.type) : null;
+          return type ? `${type.label} — настройки` : 'Настройки';
+        })()}
+        onClose={closeConfigModal}
+        onSave={handleConfigSave}
+      >
+        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
+          Конфигурация будет доступна в следующих задачах.
+        </div>
+      </ConfigModal>
 
       <button className="addButton" type="button" onClick={addCard} aria-label="Add card" tabIndex={editMode ? 0 : -1}>
         +
