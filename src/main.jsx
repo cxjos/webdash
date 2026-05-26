@@ -1,4 +1,5 @@
 import { StrictMode, useRef, useState } from 'react';
+import useLocalStorage from './hooks/useLocalStorage';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -92,7 +93,7 @@ function App() {
   const boardRef = useRef(null);
   const snapTimerRef = useRef(null);
   const [editMode, setEditMode] = useState(false);
-  const [cards, setCards] = useState(initialCards);
+  const [cards, setCards] = useLocalStorage('dashboard', initialCards);
   const [motion, setMotion] = useState(null);
 
   function addCard() {
@@ -103,7 +104,7 @@ function App() {
 
       const id = items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
 
-      return [...items, { id, ...slot }];
+      return [...items, { id, ...slot, type: null, config: {} }];
     });
   }
 
