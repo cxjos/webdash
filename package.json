@@ -3,13 +3,18 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "skill:add": "node scripts/install-opencode-skill.mjs"
+    "skill:add": "node scripts/install-opencode-skill.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "recharts": "^3.8.1",
+    "vite": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.7"
+  }
 }
