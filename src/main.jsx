@@ -1,5 +1,6 @@
 import { StrictMode, useRef, useState } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
+import Card from './components/Card';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -112,6 +113,14 @@ function App() {
     setCards((items) => items.filter((item) => item.id !== id));
   }
 
+  function handleTypeSelect(cardId) {
+    setCards((items) =>
+      items.map((item) =>
+        item.id === cardId ? { ...item, type: 'weather', config: {} } : item
+      )
+    );
+  }
+
   function startPointer(event, card, action) {
     if (!editMode || event.button !== 0) return;
 
@@ -210,51 +219,17 @@ function App() {
               <span key={`row-${index}`} className="gridLine gridLineHorizontal" style={{ top: `${((index + 1) / ROWS) * 100}%` }} />
             ))}
         </div>
-        {cards.map((card) => {
-          const activeMotion = motion?.id === card.id ? motion : null;
-          const isResizing = activeMotion?.action === 'resize';
-
-          return (
-          <article
+        {cards.map((card) => (
+          <Card
             key={card.id}
-            className={activeMotion ? `card is-${activeMotion.action}` : 'card'}
-            style={{
-              gridColumn: `${card.col} / span ${card.cols}`,
-              gridRow: `${card.row} / span ${card.rows}`,
-              '--col': card.col,
-              '--row': card.row,
-              '--cols-span': card.cols,
-              '--rows-span': card.rows,
-              width: isResizing ? `calc(var(--cols-span) * 100% / var(--cols) - var(--gap) + ${activeMotion.dx}px)` : undefined,
-              height: isResizing ? `calc(var(--rows-span) * 100% / var(--rows) - var(--gap) + ${activeMotion.dy}px)` : undefined,
-              transform: activeMotion && !isResizing ? `translate3d(${activeMotion.dx}px, ${activeMotion.dy}px, 0)` : undefined,
-            }}
-            onPointerDown={(event) => startPointer(event, card, 'move')}
-          >
-            <div className="cardBody" />
-            <button
-              className="deleteCard"
-              type="button"
-              aria-label="Delete card"
-              onClick={() => deleteCard(card.id)}
-              onPointerDown={(event) => event.stopPropagation()}
-              tabIndex={editMode ? 0 : -1}
-            >
-              удалить
-            </button>
-            <button
-              className="resize"
-              type="button"
-              aria-label="Resize card"
-              onPointerDown={(event) => {
-                event.stopPropagation();
-                startPointer(event, card, 'resize');
-              }}
-              tabIndex={editMode ? 0 : -1}
-            />
-          </article>
-          );
-        })}
+            card={card}
+            editMode={editMode}
+            motion={motion}
+            onPointerDown={startPointer}
+            onDelete={deleteCard}
+            onTypeSelect={handleTypeSelect}
+          />
+        ))}
       </section>
 
       <button className="addButton" type="button" onClick={addCard} aria-label="Add card" tabIndex={editMode ? 0 : -1}>
