@@ -3,6 +3,9 @@ import useLocalStorage from './hooks/useLocalStorage';
 import Card from './components/Card';
 import TypePicker from './components/TypePicker';
 import ConfigModal from './components/ConfigModal';
+import WeatherConfig from './components/WeatherConfig';
+import CurrencyConfig from './components/CurrencyConfig';
+import TimeConfig from './components/TimeConfig';
 import { getDefaultConfig, getCardType } from './cardTypes';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
@@ -121,6 +124,7 @@ function App() {
 
   const [pickingCardId, setPickingCardId] = useState(null);
   const [configCardId, setConfigCardId] = useState(null);
+  const [pendingConfig, setPendingConfig] = useState(null);
 
   function handleTypeSelect(cardId) {
     setPickingCardId(cardId);
@@ -130,14 +134,25 @@ function App() {
   function handleConfigOpen(cardId) {
     setConfigCardId(cardId);
     setPickingCardId(null);
+    const card = cards.find((c) => c.id === cardId);
+    setPendingConfig(card?.config || {});
   }
 
   function closeConfigModal() {
     setConfigCardId(null);
+    setPendingConfig(null);
   }
 
   function handleConfigSave() {
-    /* will be implemented by config forms */
+    if (configCardId !== null && pendingConfig !== null) {
+      setCards((items) =>
+        items.map((item) =>
+          item.id === configCardId ? { ...item, config: pendingConfig } : item
+        )
+      );
+    }
+    setConfigCardId(null);
+    setPendingConfig(null);
   }
 
   function handleTypePick(typeId) {
@@ -289,9 +304,20 @@ function App() {
         onClose={closeConfigModal}
         onSave={handleConfigSave}
       >
-        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
-          Конфигурация будет доступна в следующих задачах.
-        </div>
+        {(() => {
+          const card = cards.find((c) => c.id === configCardId);
+          if (!card) return null;
+          if (card.type === 'weather') {
+            return <WeatherConfig config={pendingConfig || card.config} onChange={setPendingConfig} />;
+          }
+          if (card.type === 'currency') {
+            return <CurrencyConfig config={pendingConfig || card.config} onChange={setPendingConfig} />;
+          }
+          if (card.type === 'time') {
+            return <TimeConfig config={pendingConfig || card.config} onChange={setPendingConfig} />;
+          }
+          return null;
+        })()}
       </ConfigModal>
 
       <button className="addButton" type="button" onClick={addCard} aria-label="Add card" tabIndex={editMode ? 0 : -1}>
