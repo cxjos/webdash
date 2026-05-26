@@ -129,12 +129,27 @@ button {
 .cardBody {
   flex: 1;
   margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .cardContent {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+.cardDegraded {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 10px;
+  letter-spacing: -0.02em;
+  user-select: none;
 }
 
 .resize {
@@ -263,7 +278,7 @@ button {
   color: rgba(255, 255, 255, 0.42);
   cursor: pointer;
   background: transparent;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -282,11 +297,6 @@ button {
   color: rgba(255, 255, 255, 0.78);
   border-color: rgba(255, 255, 255, 0.28);
   opacity: 1;
-}
-
-.cardContentPlaceholder {
-  width: 100%;
-  height: 100%;
 }
 
 .typePickerOverlay {
@@ -481,6 +491,79 @@ button {
   right: 18px;
 }
 
+.timeConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeConfigRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeConfigSelect {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 160ms ease;
+}
+
+.timeConfigSelect:hover,
+.timeConfigSelect:focus {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.timeConfigRemove {
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  background: transparent;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: color 160ms ease, border-color 160ms ease;
+  white-space: nowrap;
+}
+
+.timeConfigRemove:hover {
+  color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.timeConfigAdd {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  background: transparent;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.timeConfigAdd:hover {
+  color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
 .addButton:hover,
 .editButton:hover,
 .is-editing .editButton {
@@ -517,5 +600,46 @@ button {
   .addButton {
     right: 52px;
     bottom: 12px;
+  }
+
+  .typePickerModal {
+    max-width: calc(100vw - 24px);
+    margin: 0 12px;
+  }
+
+  .typePickerOption {
+    padding: 12px 16px;
+    font-size: 12px;
+    gap: 10px;
+  }
+
+  .typePickerIcon {
+    font-size: 16px;
+  }
+
+  .configModal {
+    max-width: calc(100vw - 24px);
+    margin: 0 12px;
+  }
+
+  .configModalHeader {
+    padding: 12px 14px;
+  }
+
+  .configModalTitle {
+    font-size: 12px;
+  }
+
+  .configModalContent {
+    padding: 12px 14px;
+  }
+
+  .configModalFooter {
+    padding: 10px 14px;
+  }
+
+  .timeConfigSelect {
+    font-size: 10px;
+    padding: 5px 6px;
   }
 }

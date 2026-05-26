@@ -1,6 +1,7 @@
 import WeatherRenderer from './WeatherRenderer';
 import CurrencyRenderer from './CurrencyRenderer';
 import TimeRenderer from './TimeRenderer';
+import { getCardType } from '../cardTypes';
 
 export default function Card({ card, editMode, motion, onPointerDown, onDelete, onTypeSelect, onConfigOpen }) {
   const activeMotion = motion?.id === card.id ? motion : null;
@@ -36,13 +37,25 @@ export default function Card({ card, editMode, motion, onPointerDown, onDelete, 
         </button>
       )}
       <div className="cardBody">
-        {card.type ? (
-          <div className="cardContent">
-            {card.type === 'weather' && <WeatherRenderer config={card.config} />}
-            {card.type === 'currency' && <CurrencyRenderer config={card.config} />}
-            {card.type === 'time' && <TimeRenderer config={card.config} />}
-          </div>
-        ) : (
+        {card.type && (() => {
+          const cardType = getCardType(card.type);
+          const isTooSmall = cardType && (card.cols < cardType.minCols || card.rows < cardType.minRows);
+          if (isTooSmall) {
+            return (
+              <div className="cardDegraded">
+                <span>Увеличьте карточку</span>
+              </div>
+            );
+          }
+          return (
+            <div className="cardContent">
+              {card.type === 'weather' && <WeatherRenderer config={card.config} />}
+              {card.type === 'currency' && <CurrencyRenderer config={card.config} />}
+              {card.type === 'time' && <TimeRenderer config={card.config} />}
+            </div>
+          );
+        })()}
+        {!card.type && (
           <button
             className="selectType"
             type="button"
