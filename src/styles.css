@@ -131,6 +131,12 @@ button {
   margin: 0;
 }
 
+.cardContent {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 .resize {
   position: absolute;
   z-index: 3;
@@ -250,6 +256,68 @@ button {
 .cardContentPlaceholder {
   width: 100%;
   height: 100%;
+}
+
+.typePickerOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  animation: typePickerFadeIn 260ms ease forwards;
+}
+
+@keyframes typePickerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.typePickerModal {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 16px;
+  padding: 8px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: #0F0F0F;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.typePickerOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: #ededed;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.typePickerOption:last-child {
+  border-bottom: none;
+}
+
+.typePickerOption:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.typePickerIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.typePickerLabel {
+  line-height: 1;
 }
 
 .addButton,

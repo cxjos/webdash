@@ -1,6 +1,8 @@
-import { StrictMode, useRef, useState } from 'react';
+import { StrictMode, useEffect, useRef, useState } from 'react';
 import useLocalStorage from './hooks/useLocalStorage';
 import Card from './components/Card';
+import TypePicker from './components/TypePicker';
+import { getDefaultConfig } from './cardTypes';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -113,13 +115,30 @@ function App() {
     setCards((items) => items.filter((item) => item.id !== id));
   }
 
+  const [pickingCardId, setPickingCardId] = useState(null);
+
   function handleTypeSelect(cardId) {
+    setPickingCardId(cardId);
+  }
+
+  function handleTypePick(typeId) {
     setCards((items) =>
       items.map((item) =>
-        item.id === cardId ? { ...item, type: 'weather', config: {} } : item
+        item.id === pickingCardId ? { ...item, type: typeId, config: getDefaultConfig(typeId) } : item
       )
     );
+    setPickingCardId(null);
   }
+
+  function closeTypePicker() {
+    setPickingCardId(null);
+  }
+
+  useEffect(() => {
+    if (!editMode && pickingCardId !== null) {
+      setPickingCardId(null);
+    }
+  }, [editMode, pickingCardId]);
 
   function startPointer(event, card, action) {
     if (!editMode || event.button !== 0) return;
@@ -231,6 +250,8 @@ function App() {
           />
         ))}
       </section>
+
+      <TypePicker isOpen={pickingCardId !== null} onSelect={handleTypePick} onClose={closeTypePicker} />
 
       <button className="addButton" type="button" onClick={addCard} aria-label="Add card" tabIndex={editMode ? 0 : -1}>
         +

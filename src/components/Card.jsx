@@ -1,3 +1,7 @@
+import WeatherRenderer from './WeatherRenderer';
+import CurrencyRenderer from './CurrencyRenderer';
+import TimeRenderer from './TimeRenderer';
+
 export default function Card({ card, editMode, motion, onPointerDown, onDelete, onTypeSelect }) {
   const activeMotion = motion?.id === card.id ? motion : null;
   const isResizing = activeMotion?.action === 'resize';
@@ -21,7 +25,11 @@ export default function Card({ card, editMode, motion, onPointerDown, onDelete, 
     >
       <div className="cardBody">
         {card.type ? (
-          <div className="cardContentPlaceholder" />
+          <div className="cardContent">
+            {card.type === 'weather' && <WeatherRenderer config={card.config} />}
+            {card.type === 'currency' && <CurrencyRenderer config={card.config} />}
+            {card.type === 'time' && <TimeRenderer config={card.config} />}
+          </div>
         ) : (
           <button
             className="selectType"
